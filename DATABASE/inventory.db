@@ -1,0 +1,79 @@
+CREATE DATABASE IF NOT EXISTS DB_Inventory;
+USE DB_Inventory;
+CREATE TABLE branches (
+  branch_id INT AUTO_INCREMENT PRIMARY KEY,
+  branch_name VARCHAR(100) NOT NULL,
+  branch_code VARCHAR(20) NOT NULL UNIQUE,
+  location VARCHAR(255),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE roles (
+  role_id INT AUTO_INCREMENT PRIMARY KEY,
+  role_name VARCHAR(50) NOT NULL UNIQUE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ;
+
+CREATE TABLE permissions (
+  permission_id INT AUTO_INCREMENT PRIMARY KEY,
+  permission_name VARCHAR(100) NOT NULL UNIQUE,
+  module_name VARCHAR(50) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE role_permissions (
+  role_permission_id INT AUTO_INCREMENT PRIMARY KEY,
+  role_id INT NOT NULL,
+  permission_id INT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_role_permission (role_id, permission_id),
+  CONSTRAINT fk_rp_role FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_rp_permission FOREIGN KEY (permission_id) REFERENCES permissions(permission_id) ON DELETE CASCADE ON UPDATE CASCADE
+) ;
+
+CREATE TABLE employees (
+  employee_id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  position VARCHAR(50),
+  department VARCHAR(50),
+  email VARCHAR(100) UNIQUE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE users (
+  user_id INT AUTO_INCREMENT PRIMARY KEY,
+  full_name VARCHAR(100) NOT NULL,
+  gender CHAR(1),
+  phone_number VARCHAR(20),
+  email VARCHAR(100) NOT NULL UNIQUE,
+  address VARCHAR(150),
+  password VARCHAR(255) NOT NULL,
+  profile_image VARCHAR(255),
+  status VARCHAR(20) DEFAULT 'active',
+  license_number VARCHAR(100),
+  role_id INT NOT NULL,
+  branch_id INT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_users_role FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT fk_users_branch FOREIGN KEY (branch_id) REFERENCES branches(branch_id) ON DELETE SET NULL ON UPDATE CASCADE
+) ;
+
+CREATE TABLE system_audit_logs (
+  log_id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  action VARCHAR(255) NOT NULL,
+  ip_address VARCHAR(45),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_logs_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL ON UPDATE CASCADE
+);
+SELECT * FROM roles;
+USE db_inventory;
+INSERT INTO roles(role_name,created_at) VALUES
+("Manager",NOW()),
+("Staff",NOW()),
+("Admin",NOW());
