@@ -1,16 +1,13 @@
 <?php
 $stmt=$connection
-->prepare('CALL PRO_UPDATEPRODUCT(?,?,?,?,?,?)');
+->prepare('CALL Pro_Update_Role(?,?,?)');
 
-$stmt->bind_param('isidss',$pro_id,$pro_name,$pro_qty,$pro_price,$pro_description,$pro_created_date);
-$pro_id=5;
-$pro_name='Iphone 14 Pro Max';
-$pro_qty=100;
-$pro_price=12000;
-$pro_description='Latest model with advanced features';
-$pro_created_date=date('Y-m-d H:i:s');
+$stmt->bind_param('iss',$role_id,$role_name,$status);
+$role_id=1;
+$role_name='staff';
+$status='Active';
 if($stmt->execute()){
-    echo "Product Updated Successfully";
+    echo "Role Updated Successfully";
 }else{
     echo "Error: ".$stmt->error;
 }

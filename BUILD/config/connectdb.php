@@ -2,7 +2,7 @@
 $hostname='localhost';
 $username='li';
 $password='123';
-$dbname='db_inventory';
+$dbname='inventory_management_system';
 $port='3306';
 $connection=
 new mysqli($hostname,$username,$password,$dbname,$port);

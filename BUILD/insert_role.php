@@ -1,8 +1,7 @@
 <?php
-$stmt=$connection->prepare('INSERT INTO roles (role_name, created_at) VALUES (?, ?)');
-$stmt->bind_param('ss',$role_name,$created_at);
-$role_name='HR';
-$created_at='2024-06-10 12:00:00';
+$stmt=$connection->prepare('CALL Pro_Insert_Role(?)');
+$stmt->bind_param('s',$role_name);
+$role_name='Manager';
 if($stmt->execute()){
     echo "Inserted Role successfully/<br>";
 }else{
